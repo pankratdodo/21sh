@@ -15,7 +15,9 @@ SRC  =	Sources/commands.c				\
 		Sources/ft_split_whitespaces.c	\
 		Sources/readline.c				\
 		Sources/redirection.c			\
-		Sources/ft_3.c     				\
+		Sources/ft_3.c          		\
+		Sources/ft_4.c					\
+		Sources/parser.c				\
 
 OBJ  = $(SRC:.c=.o)
 

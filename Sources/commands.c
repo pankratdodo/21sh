@@ -81,29 +81,19 @@ void			do_command(char *command, t_shell *shell)
 	pid_t		pid;
 	char        **env;
 
-	check_exec(command, shell);
-	args = ft_split_whitespaces(command);
-	signal(SIGINT, (void *) int_ignore);
+	args = check_exec(command, shell, 0);
 	if (*args && !is_unstandart(args, shell))
 	{
 		if (shell->type[EXEC] && check_command(args, shell))
-		{
-			if (!(pid = fork()))
-			{
-				if (shell->path)
-					args[0] = ft_strjoin(shell->path->content, args[0], 2);
-				env = shell_to_env(shell);
-				execve(args[0], args, env);
-				ft_free_split(env, 0);
-			}
-		}
-		else
+			pid = do_exec(shell, args);
+		else if (shell->type[EXEC])
 		{
 			ft_putstr("21sh: command not found: ", 0);
 			ft_putstr(args[0], 1);
 		}
 	}
 	ft_free_split(args, 0);
+	check_exec(command, shell, 1);
 	shell->path = NULL;
 	wait(&pid);
 }

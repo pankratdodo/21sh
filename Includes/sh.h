@@ -29,6 +29,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <fcntl.h>
+#include <sqlite3.h>
 
 # include "list.h"
 
@@ -42,9 +43,18 @@ enum				e_error
 enum 				e_type
 {
 	PIPE = 0,
+	REDIR_OVER,
 	REDIR,
-	EXEC
+	EXEC,
+	ELEMENTS
 };
+
+typedef	struct		s_redir
+{
+	char 			**command;
+	char 			*file;
+	int 			fd;
+}					t_redir;
 
 typedef struct		s_shell
 {
@@ -54,7 +64,8 @@ typedef struct		s_shell
 	t_list			*path_lst;
 	t_list			*path;
 	t_list			*lst_parse;
-	int 			type[3];
+	t_redir			*redir;
+	int 			type[ELEMENTS];
 }					t_shell;
 
 void				int_ignore(int signo);
@@ -79,6 +90,8 @@ char				*ft_strstr(const char *s1, const char *s2);
 char				*ignore_quotation(char *str, int to_free);
 char			    *ft_itoa(int n);
 int                 ft_atoi(const char *str);
+char				*ft_strndup(const char *s1, int n);
+int					kol_args(char **str);
 
 void				initialize_readline(void);
 
@@ -100,6 +113,9 @@ void				*on_crash(int err);
 
 void				ignore_spaces_helper(char ***args_p);
 
-void                check_exec(char *com, t_shell *shell);
+char				**check_exec(char *com, t_shell *shell, int k);
+pid_t				do_exec(t_shell *shell, char **args);
+
+void				parser_redir(t_shell *shell, char *com, char **args);
 
 #endif

@@ -12,7 +12,23 @@
 
 #include "../Includes/sh.h"
 
-int		ft_nb_words(char *str)
+char		**ft_free_split(char **d, int crash)
+{
+	int		i;
+
+	i = 0;
+	while (d[i])
+	{
+		free(d[i]);
+		i++;
+	}
+	free(d);
+	if (crash)
+		return (on_crash(MALLOC_ERR));
+	return (NULL);
+}
+
+int		ft_nb_words(const char *str, const char *symbols)
 {
 	int i;
 	int sym;
@@ -25,11 +41,8 @@ int		ft_nb_words(char *str)
 		return (0);
 	while (str[i])
 	{
-		while (str[i] != '\t' && str[i] != ' ' && str[i] != '\n' && str[i])
-		{
+		while (str[i] && str[i] != '\t' && str[i] != ' ' && str[i] != '\n' && (sym = 1))
 			i++;
-			sym = 1;
-		}
 		if (str[i] == '\t' || str[i] == ' ' || str[i] == '\n' || str[i] == '\0')
 		{
 			count += (sym == 1) ? 1 : 0;
@@ -40,20 +53,17 @@ int		ft_nb_words(char *str)
 	return (count);
 }
 
-int		ft_ln_w(char *str, int i)
+int		ft_ln_w(const char *str, const char *symbols)
 {
-	int count;
+	int i;
 
-	count = 0;
-	while (str[i] != '\t' && str[i] != ' ' && str[i] != '\n' && str[i])
-	{
-		count++;
+	i = 0;
+	while (str[i] && str[i] != '\t' && str[i] != ' ' && str[i] != '\n')
 		i++;
-	}
-	return (count);
+	return (i);
 }
 
-char	**ft_split_whitespaces(char *str)
+char	**ft_split_with_str(char *str, char *symbols)
 {
 	char	**res;
 	int		i;
@@ -62,18 +72,18 @@ char	**ft_split_whitespaces(char *str)
 
 	i = 0;
 	j = 0;
-	if ((res = malloc(sizeof(char*) * (ft_nb_words(str) + 1))) == NULL)
-		on_crash(MALLOC_ERR);
+	if (!(res = malloc(sizeof(char*) * (ft_nb_words(str, symbols) + 1))))
+		return (NULL);
 	while (str[i])
 	{
-		while ((str[i] == '\t' || str[i] == ' ' || str[i] == '\n') && str[i])
+		while (str[i] && ft_strchr(symbols, str[i]))
 			i++;
 		if (str[i])
 		{
 			k = 0;
-			if ((res[j] = malloc(sizeof(char) * ft_ln_w(str, i) + 1)) == NULL)
-				on_crash(MALLOC_ERR);
-			while (str[i] != '\t' && str[i] != ' ' && str[i] != '\n' && str[i])
+			if (!(res[j] = malloc(sizeof(char) * ft_ln_w(str + i, symbols) + 1)))
+				return (NULL);
+			while (str[i] && !(ft_strchr(symbols, str[i])))
 				res[j][k++] = str[i++];
 			res[j++][k] = '\0';
 		}

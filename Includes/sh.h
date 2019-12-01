@@ -43,17 +43,26 @@ enum				e_error
 enum 				e_type
 {
 	PIPE = 0,
-	REDIR_OVER,
 	REDIR,
 	EXEC,
 	ELEMENTS
+};
+
+enum				e_redir_type
+{
+	REDIR_OVER = 0,
+	REDIR_NO_OVER,
+	REDIR_FD_OUT,
+	REDIR_FD_IN,
+	ELEMENTSS
 };
 
 typedef	struct		s_redir
 {
 	char 			**command;
 	char 			*file;
-	int 			fd;
+	int 			fd[4]; //1-с которого меняем, 2-на который меняем, 3-ласт фд, 4-на каком сейчас
+	int 			redir_type[ELEMENTSS];
 }					t_redir;
 
 typedef struct		s_shell
@@ -75,12 +84,11 @@ int					is_unstandart(char **args, t_shell *shell);
 void				do_command(char *command, t_shell *shell);
 char				**shell_to_env(t_shell *shell);
 
-char				**ft_split_whitespaces(char *str);
+char				**ft_split_with_str(char *str, char *symbols);
 void				ft_put_prompt(char *str);
 char				*ft_strchr(const char *s, int c);
 int					ft_strcmp(const char *s11, const char *s22);
 int					ft_strlen(const char *src);
-char				**ft_strsplit(char const *s, char c);
 char				*ft_strjoin(char const *s1, char const *s2, int to_free);
 void				ft_putstr(char const *str, int new_str);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -90,8 +98,6 @@ char				*ft_strstr(const char *s1, const char *s2);
 char				*ignore_quotation(char *str, int to_free);
 char			    *ft_itoa(int n);
 int                 ft_atoi(const char *str);
-char				*ft_strndup(const char *s1, int n);
-int					kol_args(char **str);
 
 void				initialize_readline(void);
 
@@ -116,6 +122,6 @@ void				ignore_spaces_helper(char ***args_p);
 char				**check_exec(char *com, t_shell *shell, int k);
 pid_t				do_exec(t_shell *shell, char **args);
 
-void				parser_redir(t_shell *shell, char *com, char **args);
+char 				**parse_redir_fd(t_shell *shell, char *com);
 
 #endif

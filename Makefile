@@ -5,18 +5,16 @@ SRC  =	Sources/commands.c				\
 		Sources/exit.c					\
 		Sources/ft.c					\
 		Sources/ft_2.c					\
-		Sources/ft_strsplit.c			\
 		Sources/sh.c    				\
 		Sources/shell.c					\
 		Sources/unstandart.c			\
 		Sources/unstandart_2.c			\
 		Sources/list.c					\
 		Sources/cd.c					\
-		Sources/ft_split_whitespaces.c	\
+		Sources/ft_split_with_str.c		\
 		Sources/readline.c				\
 		Sources/redirection.c			\
 		Sources/ft_3.c          		\
-		Sources/ft_4.c					\
 		Sources/parser.c				\
 
 OBJ  = $(SRC:.c=.o)

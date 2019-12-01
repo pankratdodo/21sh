@@ -28,33 +28,52 @@ pid_t		do_exec(t_shell *shell, char **args)
 	return (pid);
 }
 
-void		do_redir(t_shell *shell, char *com, char **args)
+char		**do_redir(t_shell *shell, char *com)
 {
 	int		i;
+	char	**args;
 
 	i = 0;
 	shell->type[REDIR] = 1;
-	parser_redir(shell, com, args);
+	if (ft_strchr(com, '&'))
+		args = parse_redir_fd(shell, com);
+	else
+	{
+		while (com[i] && com[i] != '>' && com[i] != '<')
+			i++;
+		if (com[i] && com[i + 1] && ((com[i] == '<' && com[i + 1] == '<') || (com[i] == '>' && com[i + 1] == '>')))
+			shell->redir->redir_type[REDIR_NO_OVER] = 1;
+		else if (com[i] && com[i + 1] && ((com[i] == '<' && com[i + 1] != '<') || (com[i] == '>' && com[i + 1] != '>')))
+				shell->redir->redir_type[REDIR_OVER] = 1;
+		args = ft_split_with_str(com, " \n\t<>");
+	}
+	return (args);
 }
 
-char 		*norm_str(char *com)
+char 		**do_pipe(t_shell *shell, char *com)
 {
+	char	**args;
 
+	shell->type[PIPE] = 1;
+	args = ft_split_with_str(com, " \n\t|");
+	return (args);
 }
 
 char 		**check_exec(char *com, t_shell *shell, int k)
 {
 	char	**args;
 
-	args = ft_split_whitespaces(norm_str(com));
 	if (k == 0)
 	{
 		if (ft_strchr(com, '|'))
-			shell->type[PIPE] = 1;
+			args = do_pipe(shell, com);
 		if (ft_strchr(com, '<') || ft_strchr(com, '>'))
-			do_redir(shell, com, args);
+			args = do_redir(shell, com);
 		if (shell->type[PIPE] == 0 && shell->type[REDIR] == 0)
+		{
+			args = ft_split_with_str(com, " \n\t");
 			shell->type[EXEC] = 1;
+		}
 	}
 	else if (k == 1)
 	{
@@ -62,5 +81,5 @@ char 		**check_exec(char *com, t_shell *shell, int k)
 		shell->type[REDIR] = 0;
 		shell->type[EXEC] = 0;
 	}
-	return(args);
+	return (args);
 }

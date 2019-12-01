@@ -54,7 +54,7 @@ int				main(int ac, char *av[], char *envp[])
 		if (!*command)
 			continue ;
 		add_history(command);
-		comv = ft_strsplit(command, ';');
+		comv = ft_split_with_str(command, ";");
 		while (comv[++c])
 			do_command(comv[c], &shell);
 		ft_free_split(comv, 0);

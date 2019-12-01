@@ -33,7 +33,7 @@ void			path_init(t_shell *shell)
 	if (shell->path_lst)
 		while (shell->path_lst)
 			shell->path_lst = list_remove_front(shell->path_lst, 1);
-	if ((split = ft_strsplit(parse_env("PATH", shell, 0), ':')))
+	if ((split = ft_split_with_str(parse_env("PATH", shell, 0), ":")))
 	{
 		i = -1;
 		while (split[++i])

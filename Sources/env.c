@@ -41,7 +41,6 @@ void			ft_setenv(char **args, t_shell *shell)
 {
 	char		*str;
 	char		*name;
-	char		*value;
 
 	if (!args[1] || !args[2])
 	{
@@ -51,9 +50,7 @@ void			ft_setenv(char **args, t_shell *shell)
 	name = ignore_quotation(args[1], 0);
 	if (parse_env(name, shell, 0))
 		ft_unsetenv(args, shell);
-	str = ft_strjoin(name, "=", 0);
-	value = ignore_quotation(args[2], 0);
-	str = ft_strjoin(str, value, 3);
+	str = ft_strjoin(ft_strjoin(name, "=", 0), ignore_quotation(args[2], 0), 3);
 	shell->env_lst = list_add_back(shell->env_lst, str);
 	if (!ft_strcmp("PATH", name))
 		path_init(shell);

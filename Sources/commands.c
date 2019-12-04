@@ -79,20 +79,21 @@ void			do_command(char *command, t_shell *shell)
 {
 	char		**args;
 	pid_t		pid;
-	char        **env;
 
-	args = check_exec(command, shell, 0);
-	if (*args && !is_unstandart(args, shell))
+	if ((args = check_exec(command, shell, 0)))
 	{
-		if (shell->type[EXEC] && check_command(args, shell))
-			pid = do_exec(shell, args);
-		else if (shell->type[EXEC])
+		if (*args && !is_unstandart(args, shell))
 		{
-			ft_putstr("21sh: command not found: ", 0);
-			ft_putstr(args[0], 1);
+			if (shell->type[EXEC] && check_command(args, shell))
+				pid = do_exec(shell, args);
+			else if (shell->type[EXEC])
+			{
+				ft_putstr("21sh: command not found: ", 0);
+				ft_putstr(args[0], 1);
+			}
 		}
+		ft_free_split(args, 0);
 	}
-	ft_free_split(args, 0);
 	check_exec(command, shell, 1);
 	shell->path = NULL;
 	wait(&pid);

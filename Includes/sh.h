@@ -29,7 +29,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <fcntl.h>
-#include <sqlite3.h>
 
 # include "list.h"
 
@@ -50,8 +49,10 @@ enum 				e_type
 
 enum				e_redir_type
 {
-	REDIR_OVER = 0,
-	REDIR_NO_OVER,
+	REDIR_OVER_OUT = 0,
+	REDIR_OVER_IN,
+	REDIR_NO_OVER_OUT,
+	REDIR_NO_OVER_IN,
 	REDIR_FD_OUT,
 	REDIR_FD_IN,
 	ELEMENTSS
@@ -62,7 +63,6 @@ typedef	struct		s_redir
 	char 			**command;
 	char 			*file;
 	int 			fd[4]; //1-с которого меняем, 2-на который меняем, 3-ласт фд, 4-на каком сейчас
-	int 			redir_type[ELEMENTSS];
 }					t_redir;
 
 typedef struct		s_shell
@@ -74,6 +74,7 @@ typedef struct		s_shell
 	t_list			*path;
 	t_list			*lst_parse;
 	t_redir			*redir;
+	int 			redir_type[ELEMENTSS];
 	int 			type[ELEMENTS];
 }					t_shell;
 
@@ -92,7 +93,7 @@ int					ft_strlen(const char *src);
 char				*ft_strjoin(char const *s1, char const *s2, int to_free);
 void				ft_putstr(char const *str, int new_str);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
-char				**ft_free_split(char **d, int crash);
+void				ft_free_split(char **d, int crash);
 char				*ft_strrenew(char **s_ptr, const char *new_s, int to_free);
 char				*ft_strstr(const char *s1, const char *s2);
 char				*ignore_quotation(char *str, int to_free);

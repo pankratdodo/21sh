@@ -51,7 +51,7 @@ void			path_init(t_shell *shell)
 void			shell_init(t_shell *shell, char *envp[])
 {
 	int			i;
-    char        *str;
+	char		*str;
 
 	i = -1;
 	shell->is_path_prompt = 0;
@@ -62,11 +62,11 @@ void			shell_init(t_shell *shell, char *envp[])
 	shell->path = NULL;
 	while (envp[++i])
 		shell->env_lst = list_add_back(shell->env_lst,
-		        ft_strrenew(NULL, envp[i], 0));
+				ft_strrenew(NULL, envp[i], 0));
 	if (parse_env("SHLVL", shell, 0))
-	    str = ft_itoa(ft_atoi(parse_env("SHLVL", shell, 0)) + 1);
-    else
-        str = ft_itoa(1);
-    ft_setenv((char *[]){"setenv", "SHLVL", str, NULL}, shell);
+		str = ft_itoa(ft_atoi(parse_env("SHLVL", shell, 0)) + 1);
+	else
+		str = ft_itoa(1);
+	ft_setenv((char *[]){"setenv", "SHLVL", str, NULL}, shell);
 	path_init(shell);
 }

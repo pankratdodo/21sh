@@ -12,31 +12,6 @@
 
 #include "../Includes/sh.h"
 
-char				*ignore_quotation(char *str, int to_free)
-{
-	int				i;
-	int				j;
-	char			*ret;
-	char			ignore;
-
-	if (!(ret = malloc(ft_strlen(str) + 1)))
-		return (on_crash(MALLOC_ERR));
-	ignore = 0;
-	i = 0;
-	j = -1;
-	while (str[++j])
-	{
-		if (!ignore && (str[j] == '\'' || str[j] == '\"'))
-			ignore = str[j];
-		if (str[j] != ignore)
-			ret[i++] = str[j];
-	}
-	ret[i] = '\0';
-	if (to_free)
-		free(str);
-	return (ret);
-}
-
 char				*ft_strchr(const char *s, int c)
 {
 	size_t			i;
@@ -77,4 +52,21 @@ char				*ft_strstr(const char *s1, const char *s2)
 	if (!ft_strncmp((char *)s1, s2, ft_strlen(s2)))
 		return (((char *)s1 + i));
 	return (NULL);
+}
+
+char		*ft_strdup(const char *s1)
+{
+	int		i;
+	char	*str;
+
+	if (!(str = (char*)malloc(sizeof(char) * (ft_strlen(s1) + 1))))
+		on_crash(MALLOC_ERR);
+	i = 0;
+	while (s1[i])
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
 }

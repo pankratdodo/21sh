@@ -39,7 +39,7 @@ void			ft_echo(char **args, t_shell *shell)
 		if (ft_strchr(args[i], '$'))
 			str = parse_env(args[i] + 1, shell, 0);
 		else
-			str = ignore_quotation(args[i], 0);
+			str = ft_strdup(args[i]);
 		ft_putstr(str, 0);
 		if (args[i + 1])
 			write(1, " ", 1);

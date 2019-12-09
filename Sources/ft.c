@@ -35,9 +35,9 @@ char				*ft_strjoin(char const *s1, char const *s2, int to_free)
 	size_t			k;
 
 	if (!s1 || !s2)
-		return (NULL);
+		on_crash(MALLOC_ERR);
 	if (!(str = (char*)malloc(ft_strlen((char*)s1) + ft_strlen((char*)s2) + 1)))
-		return (NULL);
+		on_crash(MALLOC_ERR);
 	i = 0;
 	k = 0;
 	while (s1[i])
@@ -90,8 +90,7 @@ void				ft_putstr(char const *str, int new_str)
 {
 	if (!str)
 		return ;
-	while (*str)
-		write(1, str++, 1);
+	write(1, str, ft_strlen(str));
 	if (new_str)
 		write(1, "\n", 1);
 }

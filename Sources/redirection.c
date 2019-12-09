@@ -31,7 +31,6 @@ pid_t		do_exec(t_shell *shell, char **args)
 char		**do_redir(t_shell *shell, char *com)
 {
 	int		i;
-	char	**args;
 
 	i = 0;
 	shell->type[REDIR] = 1;
@@ -56,7 +55,7 @@ char		**do_redir(t_shell *shell, char *com)
 	}
 }
 
-char 		**do_pipe(t_shell *shell, char *com)
+char		**do_pipe(t_shell *shell, char *com)
 {
 	char	**args;
 
@@ -65,21 +64,25 @@ char 		**do_pipe(t_shell *shell, char *com)
 	return (args);
 }
 
-char 		**check_exec(char *com, t_shell *shell, int k)
+char		**check_exec(char *com, t_shell *shell, int k)
 {
-	char	**args;
+	int		i;
 
+	i = 0;
 	if (k == 0)
 	{
-		if (ft_strchr(com, '|'))
-			return (do_pipe(shell, com));
-		if (ft_strchr(com, '<') || ft_strchr(com, '>'))
-			return (do_redir(shell, com));
+		while (com[i] && com[i] != '|' && com[i] != '<' && com[i] != '>')
+		{
+			if (com[i] == '|')
+				return (do_pipe(shell, com));
+			if (com[i] == '<' || com[i] == '>')
+				return (do_redir(shell, com));
+			i++;
+		}
 		if (shell->type[PIPE] == 0 && shell->type[REDIR] == 0)
 		{
-			args = ft_split_with_str(com, " \n\t");
 			shell->type[EXEC] = 1;
-			return (args);
+			return (ft_split_with_str(com, " \n\t"));
 		}
 	}
 	else if (k == 1)

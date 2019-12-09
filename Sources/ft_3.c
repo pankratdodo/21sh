@@ -12,17 +12,17 @@
 
 #include "../Includes/sh.h"
 
-int             ft_atoi(const char *str)
+int				ft_atoi(const char *str)
 {
-	char	    *ptr;
-	int		    is_neg;
-	int		    result;
+	char		*ptr;
+	int			is_neg;
+	int			result;
 
 	result = 0;
 	ptr = (char *)str;
 	is_neg = 0;
 	while (*ptr == ' ' || *ptr == '\t' || *ptr == '\v'
-	       || *ptr == '\n' || *ptr == '\f' || *ptr == '\r')
+			|| *ptr == '\n' || *ptr == '\f' || *ptr == '\r')
 		ptr++;
 	if (*ptr == '-' || *ptr == '+')
 	{
@@ -41,9 +41,9 @@ int             ft_atoi(const char *str)
 	return (result);
 }
 
-char	        *ft_strcpy(char *dst, const char *src)
+char			*ft_strcpy(char *dst, const char *src)
 {
-	char        *ret;
+	char		*ret;
 
 	ret = dst;
 	while (*src)
@@ -58,7 +58,7 @@ char	        *ft_strcpy(char *dst, const char *src)
 
 static int		ft_nblen_internal(int nb)
 {
-	int         len;
+	int			len;
 
 	len = 0;
 	if (nb < 0)
@@ -96,8 +96,8 @@ static	void	ft_putnbr_buffer(int nb, char *str, int *index)
 
 char			*ft_itoa(int n)
 {
-	char	    *tmp;
-	int		    index;
+	char		*tmp;
+	int			index;
 
 	tmp = (char *)malloc(ft_nblen_internal(n) + 1);
 	if (!tmp)

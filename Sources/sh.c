@@ -57,7 +57,7 @@ int				main(int ac, char *av[], char *envp[])
 		comv = ft_split_with_str(command, ";");
 		while (comv[++c])
 			do_command(comv[c], &shell);
-		ft_free_split(comv, 0);
+		//ft_free_split(comv, 0);
 		free(command);
 	}
 }

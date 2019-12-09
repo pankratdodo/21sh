@@ -16,6 +16,9 @@ SRC  =	Sources/commands.c				\
 		Sources/redirection.c			\
 		Sources/ft_3.c          		\
 		Sources/parser.c				\
+		Sources/is_not_valid.c			\
+		Sources/check_quotation.c		\
+		Sources/quotation_helper.c		\
 
 OBJ  = $(SRC:.c=.o)
 

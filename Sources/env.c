@@ -19,11 +19,8 @@ void			ft_unsetenv(char **args, t_shell *shell)
 
 	lst = shell->env_lst;
 	if (!args[1])
-	{
-		ft_putstr("using: unsetenv [name]", 1);
-		return ;
-	}
-	str = ignore_quotation(args[1], 0);
+		return (ft_putstr("using: unsetenv [name]", 1));
+	str = ft_strdup(args[1]);
 	if (parse_env(str, shell, 0))
 	{
 		while (lst->next != shell->lst_parse)
@@ -47,10 +44,10 @@ void			ft_setenv(char **args, t_shell *shell)
 		ft_putstr("using: setenv [name] [value]", 1);
 		return ;
 	}
-	name = ignore_quotation(args[1], 0);
+	name = ft_strdup(args[1]);
 	if (parse_env(name, shell, 0))
 		ft_unsetenv(args, shell);
-	str = ft_strjoin(ft_strjoin(name, "=", 0), ignore_quotation(args[2], 0), 3);
+	str = ft_strjoin(ft_strjoin(name, "=", 0), ft_strdup(args[2]), 3);
 	shell->env_lst = list_add_back(shell->env_lst, str);
 	if (!ft_strcmp("PATH", name))
 		path_init(shell);

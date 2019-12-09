@@ -30,11 +30,11 @@ void		ft_free_split(char **d, int crash)
 		on_crash(MALLOC_ERR);
 }
 
-int		ft_nb_words(const char *str, const char *symbols)
+int			ft_nb_words(const char *str, const char *symbols)
 {
-	int i;
-	int sym;
-	int count;
+	int		i;
+	int		sym;
+	int		count;
 
 	i = 0;
 	sym = 0;
@@ -55,9 +55,9 @@ int		ft_nb_words(const char *str, const char *symbols)
 	return (count);
 }
 
-int		ft_ln_w(const char *str, char *symbols)
+int			ft_ln_w(const char *str, char *symbols)
 {
-	int i;
+	int		i;
 
 	i = 0;
 	while (str[i] && !(ft_strchr(symbols, str[i])))
@@ -65,7 +65,7 @@ int		ft_ln_w(const char *str, char *symbols)
 	return (i);
 }
 
-char	**ft_split_with_str(char *str, char *symbols)
+char		**ft_split_with_str(char *str, char *symb)
 {
 	char	**res;
 	int		i;
@@ -74,25 +74,20 @@ char	**ft_split_with_str(char *str, char *symbols)
 
 	i = 0;
 	j = 0;
-	if (!(res = malloc(sizeof(char*) * (ft_nb_words(str, symbols) + 2))))
+	if (!(res = malloc(sizeof(char*) * (ft_nb_words(str, symb) + 2))))
 		on_crash(MALLOC_ERR);
 	while (str[i])
 	{
-		while (str[i] && ft_strchr(symbols, str[i]))
+		while (str[i] && ft_strchr(symb, str[i]))
 			i++;
 		if (str[i])
 		{
 			k = 0;
-			if (!(res[j] = malloc(sizeof(char) * ft_ln_w(str + i, symbols) + 1)))
+			if (!(res[j] = malloc(sizeof(char) * ft_ln_w(str + i, symb) + 1)))
 				on_crash(MALLOC_ERR);
-			while (str[i] && !(ft_strchr(symbols, str[i])))
-			{
-				res[j][k] = str[i];
-				i++;
-				k++;
-			}
-			res[j][k] = '\0';
-			j++;
+			while (str[i] && !(ft_strchr(symb, str[i])))
+				res[j][k++] = str[i++];
+			res[j++][k] = '\0';
 		}
 	}
 	res[j] = NULL;

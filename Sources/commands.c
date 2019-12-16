@@ -82,23 +82,24 @@ void			do_command(char *command, t_shell *shell)
 
 	if ((!(is_not_valid(command))) && (com = check_quotation(command, 1, shell)))
 	{
-		if ((args = check_exec(com, shell, 0)))
+		check_exec(com, shell, 0);
+		if (shell->type[EXEC] && (args = ft_split_with_str(com, " \n\t")))
 		{
-			if (*args && !is_unstandart(args, shell))
+			if (!is_unstandart(args, shell))
 			{
-				if (shell->type[EXEC] && check_command(args, shell))
+				if (check_command(args, shell))
 					pid = do_exec(shell, args);
-				else if (shell->type[EXEC])
+				else
 				{
 					ft_putstr("21sh: command not found: ", 0);
 					ft_putstr(args[0], 1);
 				}
+				wait(&pid);
 			}
 			ft_free_split(args, 0);
 		}
 		check_exec(com, shell, 1);
 		shell->path = NULL;
-		wait(&pid);
 		free(com);
 	}
 }

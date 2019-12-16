@@ -20,7 +20,7 @@ void		put_quote_name(char c, t_shell *shell)
 		shell->prompt = ft_strrenew(&shell->prompt, "dquote>  ", 1);
 	else if (c == '\'')
 		shell->prompt = ft_strrenew(&shell->prompt, "quote>  ", 1);
-	ft_putstr(shell->prompt, 0); // стирается, когда что-то напишу и уберу
+	ft_putstr(shell->prompt, 0);
 }
 
 char		find_first(char *str)
@@ -41,8 +41,7 @@ char		*remove_quote(char *str, char c)
 	int		j;
 	int		dels;
 
-	if (!(ret = malloc(ft_strlen(str) - 1)))
-		on_crash(MALLOC_ERR);
+	MALLOC(ret, (ft_strlen(str) - 1));
 	i = -1;
 	j = -1;
 	dels = 0;
@@ -80,17 +79,23 @@ char		*check_quotation(const char *str, int to_free, t_shell *shell)
 {
 	char	*ret;
 	char	c;
+	char	**args;
+	int		flag;
 
+	flag = 0;
+	args = ft_split_with_str((char *)str, " \n\t");
+	if (ft_strcmp(args[0], "echo"))
+		flag = 1;
 	ret = ft_strjoin(str, "", to_free != 0);
 	if (check_count(&ret, &c))
 	{
 		put_quote_name(c, shell);
-		ret = ft_strjoin(ret, "\\n", 1);
+		flag == 1 ? (ret = ft_strjoin(ret, "\\n", 1)) : (ret = ft_strjoin(ret, "\n", 1));
 		ret = ft_strjoin(ret, readline(""), 3);
 		while (check_count(&ret, &c))
 		{
 			put_quote_name(c, shell);
-			ret = ft_strjoin(ret, "\\n", 1);
+			flag == 1 ? (ret = ft_strjoin(ret, "\\n", 1)) : (ret = ft_strjoin(ret, "\n", 1));
 			ret = ft_strjoin(ret, readline(""), 3);
 		}
 	}

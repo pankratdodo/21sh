@@ -19,6 +19,7 @@
 # define BLUE "\033[1;34m"
 # define VIOLET "\033[1;35m"
 # define RESET "\033[0m"
+# define MALLOC(var, size) if (!(var = malloc(size))) on_crash(MALLOC_ERR)
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -47,24 +48,6 @@ enum 				e_type
 	ELEMENTS
 };
 
-enum				e_redir_type
-{
-	REDIR_OVER_OUT = 0,
-	REDIR_OVER_IN,
-	REDIR_NO_OVER_OUT,
-	REDIR_NO_OVER_IN,
-	REDIR_FD_OUT,
-	REDIR_FD_IN,
-	ELEMENTSS
-};
-
-typedef	struct		s_redir
-{
-	char 			**command;
-	char 			*file;
-	int 			fd[4]; //1-с которого меняем, 2-на который меняем, 3-ласт фд, 4-на каком сейчас
-}					t_redir;
-
 typedef struct		s_shell
 {
 	char			*prompt;
@@ -74,8 +57,8 @@ typedef struct		s_shell
 	t_list			*path_lst;
 	t_list			*path;
 	t_list			*lst_parse;
-	t_redir			*redir;
-	int 			redir_type[ELEMENTSS];
+	t_list			*commands;
+	t_list			*sep;
 	int 			type[ELEMENTS];
 }					t_shell;
 
@@ -102,6 +85,10 @@ char			    *ft_itoa(int n);
 int                 ft_atoi(const char *str);
 int					ft_strchr_twice(const char *str, char c);
 char				*ft_strdup(const char *s1);
+char 				*ft_strccpy(char *str, char c);
+int 				ft_strclen(char *str, char c);
+char 				*ft_strcpy_len(char *str, int first, int last);
+void				ft_putendl_fd(char const *s, int fd);
 
 void				initialize_readline(void);
 
@@ -121,10 +108,15 @@ void				ft_setenv(char **args, t_shell *shell);
 
 void				*on_crash(int err);
 
-char				**check_exec(char *com, t_shell *shell, int k);
+void				check_exec(char *com, t_shell *shell, int k);
 pid_t				do_exec(t_shell *shell, char **args);
+int					check_command(char **args, t_shell *shell);
+char				*add_last_com(char *com, t_shell *shell, int i);
+void				do_redir_pipe(t_list *command, t_list *sep);
 
-char 				**parse_redir_fd(t_shell *shell, char *com);
+char				*parse_redir_fd(t_shell *shell, char *com);
+char				*parser_pipe(t_shell *shell, char *com);
+char				*parser_redir(t_shell *shell, char *com);
 char				*check_quotation(const char *str, int to_free, t_shell *shell);
 int 				is_not_valid(char *str);
 void				return_prompt(t_shell *shell);

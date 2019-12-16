@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <zconf.h>
 #include "../Includes/sh.h"
 
 pid_t		do_exec(t_shell *shell, char **args)
@@ -28,62 +29,80 @@ pid_t		do_exec(t_shell *shell, char **args)
 	return (pid);
 }
 
-char		**do_redir(t_shell *shell, char *com)
+void		check_helper(t_shell *shell, char *com)
 {
 	int		i;
 
 	i = 0;
-	shell->type[REDIR] = 1;
-	if (ft_strchr(com, '&'))
-		return (parse_redir_fd(shell, com));
-	else
+	while (com[i])
 	{
-		while (com[i] && com[i] != '>' && com[i] != '<')
-			i++;
-		if (com[i] && com[i + 1] && com[i] == '<' && com[i + 1] == '<')
-			shell->redir_type[REDIR_NO_OVER_IN] = 1;
-		else if (com[i] && com[i + 1] && com[i] == '>' && com[i + 1] == '>')
-			shell->redir_type[REDIR_NO_OVER_OUT] = 1;
-		else if (com[i] && com[i + 1] && com[i] == '<' && com[i + 1] != '<')
-			shell->redir_type[REDIR_OVER_IN] = 1;
-		else if (com[i] && com[i + 1] && com[i] == '>' && com[i + 1] != '>')
-			shell->redir_type[REDIR_OVER_OUT] = 1;
-		if (com[i])
-			return (ft_split_with_str(com, " \n\t<>"));
+		if (com[i] == '|')
+		{
+			com = parser_pipe(shell, com);
+			i = 0;
+		}
+		else if (com[i] == '<' || com[i] == '>')
+		{
+			com = parser_redir(shell, com);
+			i = 0;
+		}
 		else
-			return (NULL);
+			i++;
 	}
 }
 
-char		**do_pipe(t_shell *shell, char *com)
+void		do_pipe(t_list *command, t_list *separ)
 {
-	char	**args;
+	t_list		*pcmd;
+	int			pipes[2];
+	int			pid[2];
 
-	shell->type[PIPE] = 1;
-	args = ft_split_with_str(com, " \n\t|");
-	return (args);
+	pcmd = command;
+	if (pipe(pipes) != 0)
+		ft_putendl_fd("pipe error", 2);
+	else if ((pid[0] = fork()) == 0)
+	{
+		dup2(pipes[1], STDOUT_FILENO);
+		close(pipes[0]);
+		do_redir_pipe(command, separ->next);
+		exit(0);
+	}
+	if ((pid[1] = fork()) == 0)
+	{
+		dup2(pipes[0], STDIN_FILENO);
+		close(pipes[1]);
+		do_redir_pipe(command, separ->next);
+		exit(0);
+	}
+	close(pipes[0]);
+	close(pipes[1]);
+	waitpid(-1, 0, 0);
+	waitpid(-1, 0, 0);
 }
 
-char		**check_exec(char *com, t_shell *shell, int k)
+void		do_redir_pipe(t_list *command, t_list *sep)
 {
-	int		i;
+	if (!(ft_strcmp(sep->content, "|")))
+		do_pipe(command, sep);
+//	else if (!(ft_strcmp(sep->content, ">>")) || !(ft_strcmp(sep->content, "<<")))
+//		do_redir(shell);
+//	else if (!(ft_strcmp(sep->content, ">")) || !(ft_strcmp(sep->content, "<")))
+//		do_redir_over(shell);
+//	else
+//		do_fd_redir(shell);
+}
 
-	i = 0;
+void		check_exec(char *com, t_shell *shell, int k)
+{
 	if (k == 0)
 	{
-		while (com[i] && com[i] != '|' && com[i] != '<' && com[i] != '>')
-		{
-			if (com[i] == '|')
-				return (do_pipe(shell, com));
-			if (com[i] == '<' || com[i] == '>')
-				return (do_redir(shell, com));
-			i++;
-		}
+		shell->commands = NULL;
+		shell->sep = NULL;
+		check_helper(shell, com);
 		if (shell->type[PIPE] == 0 && shell->type[REDIR] == 0)
-		{
 			shell->type[EXEC] = 1;
-			return (ft_split_with_str(com, " \n\t"));
-		}
+		else
+			do_redir_pipe(shell->commands, shell->sep);
 	}
 	else if (k == 1)
 	{
@@ -91,5 +110,4 @@ char		**check_exec(char *com, t_shell *shell, int k)
 		shell->type[REDIR] = 0;
 		shell->type[EXEC] = 0;
 	}
-	return (NULL);
 }

@@ -15,6 +15,7 @@ SRC  =	Sources/commands.c				\
 		Sources/readline.c				\
 		Sources/redirection.c			\
 		Sources/ft_3.c          		\
+		Sources/ft_4.c          		\
 		Sources/parser.c				\
 		Sources/is_not_valid.c			\
 		Sources/check_quotation.c		\

@@ -10,7 +10,7 @@ int				ft_error(char *str, int k)
 		ft_putstr("21sh: parse error near `", 0);
 		while (str[++i] && (str[i] == '>' || str[i] == '<' || str[i] == '&'))
 			write(1, &str[i], 1);
-		if (!str[++i])
+		if (!str[i])
 			ft_putstr("\\n", 0);
 		ft_putstr("'", 1);
 	}

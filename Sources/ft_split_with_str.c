@@ -74,8 +74,9 @@ char		**ft_split_with_str(char *str, char *symb)
 
 	i = 0;
 	j = 0;
-	if (!(res = malloc(sizeof(char*) * (ft_nb_words(str, symb) + 2))))
-		on_crash(MALLOC_ERR);
+	if (!str)
+		return (NULL);
+	MALLOC(res, (sizeof(char*) * (ft_nb_words(str, symb) + 2)));
 	while (str[i])
 	{
 		while (str[i] && ft_strchr(symb, str[i]))
@@ -83,8 +84,7 @@ char		**ft_split_with_str(char *str, char *symb)
 		if (str[i])
 		{
 			k = 0;
-			if (!(res[j] = malloc(sizeof(char) * ft_ln_w(str + i, symb) + 1)))
-				on_crash(MALLOC_ERR);
+			MALLOC(res[j], (sizeof(char) * ft_ln_w(str + i, symb) + 1));
 			while (str[i] && !(ft_strchr(symb, str[i])))
 				res[j][k++] = str[i++];
 			res[j++][k] = '\0';

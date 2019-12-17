@@ -112,7 +112,7 @@ void				check_exec(char *com, t_shell *shell, int k);
 pid_t				do_exec(t_shell *shell, char **args);
 int					check_command(char **args, t_shell *shell);
 char				*add_last_com(char *com, t_shell *shell, int i);
-void				do_redir_pipe(t_list *command, t_list *sep);
+void				do_redir_pipe(t_list *command, t_list *sep, char *res);
 
 char				*parse_redir_fd(t_shell *shell, char *com);
 char				*parser_pipe(t_shell *shell, char *com);

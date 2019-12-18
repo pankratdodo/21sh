@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <zconf.h>
 #include "../Includes/sh.h"
 
 pid_t		do_exec(t_shell *shell, char **args)
@@ -51,7 +50,7 @@ void		check_helper(t_shell *shell, char *com)
 	}
 }
 
-void		do_pipe(t_list *command, t_list *separ, char *res)
+void		do_pipe(t_shell *shell, t_list *com, t_list *separ, char *res)
 {
 	int			pipes[2];
 	int			pid[2];
@@ -64,16 +63,16 @@ void		do_pipe(t_list *command, t_list *separ, char *res)
 	{
 		dup2(pipes[1], STDOUT_FILENO);
 		close(pipes[0]);
-		res = ft_strdup(command->content);
-		do_redir_pipe(command->next, sepp->next, res);
+		res = ft_strdup(com->content);
+		do_redir_pipe(shell, com->next, sepp->next, res);
 		exit(0);
 	}
 	if (!(pid[1] = fork()))
 	{
 		dup2(pipes[0], STDIN_FILENO);
 		close(pipes[1]);
-		res = ft_strdup(command->next->content);
-		do_redir_pipe(command->next, sepp->next, res);
+		res = ft_strdup(com->next->content);
+		do_redir_pipe(shell, com->next, sepp->next, res);
 		exit(0);
 	}
 	close(pipes[0]);
@@ -82,49 +81,63 @@ void		do_pipe(t_list *command, t_list *separ, char *res)
 	waitpid(-1, 0, 0);
 }
 
-void 		do_redir(t_list *command, t_list *separ, char *res)
+void 		do_redir(t_shell *shell, t_list *com, t_list *separ, char *res)
 {
 	int 	fd;
 
-	if (!(access(command->next->content, F_OK | R_OK | W_OK)))
-		fd = open(command->next->content, O_CREAT | O_APPEND | O_RDWR);
+	if (!(access(com->next->content, F_OK | R_OK | W_OK)))
+		fd = open(com->next->content, O_CREAT | O_APPEND | O_RDWR);
 	else if (!(ft_strcmp(separ->content, "<<")) || !(ft_strcmp(separ->content, ">>")))
-		fd = open(command->next->content, O_APPEND | O_RDWR);
+		fd = open(com->next->content, O_APPEND | O_RDWR);
 	else
-		fd = open(command->next->content, O_TRUNC | O_APPEND | O_RDWR);
+		fd = open(com->next->content, O_TRUNC | O_APPEND | O_RDWR);
 	if (!(ft_strcmp(separ->content, "<<")) || !(ft_strcmp(separ->content, "<")))
-		dup2(fd, 0);
+	{
+		dup2(fd, shell->fd[0]);
+		shell->fd[0] = fd;
+	}
 	else
-		dup2(fd, 1);
+	{
+		dup2(fd, shell->fd[1]);
+		shell->fd[1] = fd;
+	}
+	res ? free(res) : 0;
+	res = ft_strdup(com->content);
 	close(fd);
-	do_redir_pipe(command->next, separ->next, res);
+	do_redir_pipe(shell, com->next, separ->next, res);
 }
 
-void		do_redir_pipe(t_list *command, t_list *sep, char *res)
+char		*do_redir_pipe(t_shell *shell, t_list *com, t_list *sep, char *res)
 {
 	if (sep->content)
 	{
 		if (!(ft_strcmp(sep->content, "|")))
-			do_pipe(command, sep, res);
+			do_pipe(shell, com, sep, res);
 		else if (!(ft_strcmp(sep->content, ">>")) || !(ft_strcmp(sep->content, "<<"))
 			|| !(ft_strcmp(sep->content, ">")) || !(ft_strcmp(sep->content, "<")))
-			do_redir(command, sep, res);
+			do_redir(shell, com, sep, res);
 //	else if ()
 //		do_fd_redir(shell);
 	}
+	else
+		return (NULL);
+	ft_putstr("lox", 1);
+	return (res);
 }
 
-void		check_exec(char *com, t_shell *shell, int k)
+char		*check_exec(char *com, t_shell *shell, int k)
 {
 	if (k == 0)
 	{
 		shell->commands = NULL;
 		shell->sep = NULL;
+		shell->fd[0] = 0;
+		shell->fd[1] = 1;
 		check_helper(shell, com);
 		if (shell->type[PIPE] == 0 && shell->type[REDIR] == 0)
 			shell->type[EXEC] = 1;
 		else
-			do_redir_pipe(shell->commands, shell->sep, NULL);
+			return (do_redir_pipe(shell, shell->commands, shell->sep, NULL));
 	}
 	else if (k == 1)
 	{
@@ -132,4 +145,5 @@ void		check_exec(char *com, t_shell *shell, int k)
 		shell->type[REDIR] = 0;
 		shell->type[EXEC] = 0;
 	}
+	return (NULL);
 }

@@ -13,7 +13,7 @@ char		*parser_redir(t_shell *shell, char *com)
 	{
 		while (com[i] && com[i] != '>' && com[i] != '<')
 			i++;
-		if ((first = ft_strcpy_len(com, 0, i)))
+		if ((first = ft_strcpy_len(com, 0, i - 1)))
 			shell->commands = list_add_back(shell->commands, first);
 		if (com[i] && com[i + 1] && com[i] == '<' && com[i + 1] == '<')
 			shell->sep = list_add_back(shell->sep, "<<");

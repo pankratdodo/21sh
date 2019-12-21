@@ -48,6 +48,12 @@ int				check_command(char **args, t_shell *shell)
 			free(path);
 			lst = lst->next;
 		}
+		if (shell->path == NULL)
+		{
+			ft_putstr("21sh: permission denied: ", 0);
+			ft_putstr(args[0], 1);
+			return (1);
+		}
 		return (shell->path != NULL);
 	}
 	else
@@ -82,22 +88,22 @@ void			do_command(char *command, t_shell *shell)
 
 	if ((!(is_not_valid(command))) && (com = check_quotation(command, 1, shell)))
 	{
-		check_exec(com, shell, 0);
-		if (shell->type[EXEC] && (args = ft_split_with_str(com, " \n\t")))
-		{
-			if (!is_unstandart(args, shell))
+		if ((com = check_exec(com, shell, 0)))
+			if (shell->type[EXEC] && (args = ft_split_with_str(com, " \n\t")))
 			{
-				if (check_command(args, shell))
-					pid = do_exec(shell, args);
-				else
+				if (!is_unstandart(args, shell))
 				{
-					ft_putstr("21sh: command not found: ", 0);
-					ft_putstr(args[0], 1);
+					if (check_command(args, shell))
+						pid = do_exec(shell, args);
+					else
+					{
+						ft_putstr("21sh: command not found: ", 0);
+						ft_putstr(args[0], 1);
+					}
+					wait(&pid);
 				}
-				wait(&pid);
+				ft_free_split(args, 0);
 			}
-			ft_free_split(args, 0);
-		}
 		check_exec(com, shell, 1);
 		shell->path = NULL;
 		free(com);

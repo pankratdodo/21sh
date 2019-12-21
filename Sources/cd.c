@@ -97,13 +97,13 @@ void			ft_cd_2(char *args[], t_shell *shell)
 		}
 		else
 		{
-			ft_putstr("minishell: not a directory: ", 0);
+			ft_putstr("21sh: not a directory: ", 0);
 			ft_putstr(args[1], 1);
 		}
 	}
 	else
 	{
-		ft_putstr("minishell: no such file or directory: ", 0);
+		ft_putstr("21sh: no such file or directory: ", 0);
 		ft_putstr(args[1], 1);
 	}
 	free(full_path);

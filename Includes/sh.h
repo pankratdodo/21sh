@@ -92,6 +92,7 @@ char 				*ft_strcpy_len(char *str, int first, int last);
 void				ft_putendl_fd(char const *s, int fd);
 
 void				initialize_readline(void);
+void			helper_for_com(t_shell *shell, char *com);
 
 void				ft_help(void);
 void				ft_echo(char **args, t_shell *shell);

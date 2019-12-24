@@ -74,31 +74,41 @@ char			**shell_to_env(t_shell *shell)
 	return (env);
 }
 
-void			do_command(char *command, t_shell *shell)
+void			helper_for_com(t_shell *shell, char *com)
 {
 	char		**args;
-	char		*com;
 	pid_t		pid;
+
+	if ((args = ft_split_with_str(com, " \n\t")))
+	{
+		if (!is_unstandart(args, shell))
+		{
+			if (check_command(args, shell))
+				pid = do_exec(shell, args);
+			else
+			{
+				ft_putstr("21sh: command not found: ", 0);
+				ft_putstr(args[0], 1);
+			}
+			wait(&pid);
+		}
+		ft_free_split(args, 0);
+	}
+	return_all(shell);
+}
+
+void			do_command(char *command, t_shell *shell)
+{
+	char		*com;
+	char 		*check;
 
 	if ((!(is_not_valid(command))) && (com = check_quotation(command, 1, shell)))
 	{
-		if ((com = check_exec(com, shell)))
-			if (shell->type[EXEC] && (args = ft_split_with_str(com, " \n\t")))
-			{
-				if (!is_unstandart(args, shell))
-				{
-					if (check_command(args, shell))
-						pid = do_exec(shell, args);
-					else
-					{
-						ft_putstr("21sh: command not found: ", 0);
-						ft_putstr(args[0], 1);
-					}
-					wait(&pid);
-				}
-				ft_free_split(args, 0);
-			}
-		return_all(shell);
+		if ((check = check_exec(com, shell)))
+		{
+			helper_for_com(shell, check);
+			free(check);
+		}
 		shell->path = NULL;
 		free(com);
 	}

@@ -133,7 +133,7 @@ char		*do_redir_pipe(t_shell *shell, t_list *com, t_list *sep, char *res)
 			do_redir(shell, com, sep, res);
 	}
 	if (res)
-		shell->type[EXEC] = 1;
+		helper_for_com(shell, res);
 	return (res);
 }
 
@@ -144,12 +144,12 @@ void		return_all(t_shell *shell)
 	shell->type[EXEC] = 0;
 	if (shell->fd[0] != 0)
 	{
-		dup2(shell->fd[0], 0);
+		dup2(0, shell->fd[0]);
 		close(shell->fd[0]);
 	}
 	if (shell->fd[1] != 1)
 	{
-		dup2(shell->fd[1], 1);
+		dup2(1, shell->fd[1]);
 		close(shell->fd[1]);
 	}
 	shell->fd[0] = 0;
@@ -168,8 +168,7 @@ char		*check_exec(char *com, t_shell *shell)
 		shell->type[EXEC] = 1;
 		return (com);
 	}
-	free(com);
 	if (shell->type[PIPE] == 1 || shell->type[REDIR] == 1)
-		return (do_redir_pipe(shell, shell->commands, shell->sep, NULL));
+		do_redir_pipe(shell, shell->commands, shell->sep, NULL);
 	return (NULL);
 }

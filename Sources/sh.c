@@ -51,7 +51,7 @@ int				main(int ac, char *av[], char *envp[])
 	while ((c = -1))
 	{
 		signal(SIGINT, (void*)my_int);
-		initialize_readline();
+		//initialize_readline();
 		command = readline(shell.prompt);
 		if (!command)
 			on_crash(EOF_EXIT);

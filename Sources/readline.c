@@ -51,6 +51,6 @@ static char	**ash_complition(const char *text, int start, int end)
 
 void		initialize_readline(void)
 {
-	rl_readline_name = "minishell";
+	rl_readline_name = "21sh";
 	rl_attempted_completion_function = ash_complition;
 }

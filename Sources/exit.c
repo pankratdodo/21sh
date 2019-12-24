@@ -14,8 +14,8 @@
 
 void		*on_crash(int err)
 {
-	(err == EOF_EXIT) ? ft_putstr("\n    Exit", 1) : 0;
-	(err == MALLOC_ERR) ? ft_putstr("Malloc error", 1) : 0;
-	(err == GETCWD_ERR) ? ft_putstr("Getcwd error", 1) : 0;
+	(err == EOF_EXIT) ? ft_putendl_fd("\n    Exit", 2) : 0;
+	(err == MALLOC_ERR) ? ft_putendl_fd("Malloc error", 2) : 0;
+	(err == GETCWD_ERR) ? ft_putendl_fd("Getcwd error", 2) : 0;
 	exit(err);
 }

@@ -43,7 +43,11 @@ int				main(int ac, char *av[], char *envp[])
 
 	system("clear");
 	shell_init(&shell, envp);
-	ac += av[0][0];
+	if (ac > 1)
+	{
+		ft_putendl_fd("21sh: cannot execute commands", 2);
+		return (0);
+	}
 	while ((c = -1))
 	{
 		signal(SIGINT, (void*)my_int);

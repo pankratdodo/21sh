@@ -109,7 +109,7 @@ void				ft_setenv(char **args, t_shell *shell);
 
 void				*on_crash(int err);
 
-char				*check_exec(char *com, t_shell *shell, int k);
+char				*check_exec(char *com, t_shell *shell);
 pid_t				do_exec(t_shell *shell, char **args);
 int					check_command(char **args, t_shell *shell);
 char				*add_last_com(char *com, t_shell *shell, int i);
@@ -120,6 +120,7 @@ char				*parser_pipe(t_shell *shell, char *com);
 char				*parser_redir(t_shell *shell, char *com);
 char				*check_quotation(const char *str, int to_free, t_shell *shell);
 int 				is_not_valid(char *str);
+void				return_all(t_shell *shell);
 void				return_prompt(t_shell *shell);
 
 #endif

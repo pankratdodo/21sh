@@ -17,7 +17,7 @@ pid_t		do_exec(t_shell *shell, char **args)
 	pid_t	pid;
 	char	**env;
 
-	if (shell->path && !(pid = fork()))
+	if (shell->type[EXEC] && shell->path && !(pid = fork()))
 	{
 		if (shell->path)
 			args[0] = ft_strjoin(shell->path->content, args[0], 2);
@@ -63,6 +63,8 @@ void		do_pipe(t_shell *shell, t_list *com, t_list *separ, char *res)
 	{
 		dup2(pipes[1], STDOUT_FILENO);
 		close(pipes[0]);
+		shell->type[EXEC] = 0;
+		helper_for_com(shell, com->next->content);
 		res = ft_strdup(com->content);
 		do_redir_pipe(shell, com->next, sepp->next, res);
 		exit(0);
@@ -71,6 +73,8 @@ void		do_pipe(t_shell *shell, t_list *com, t_list *separ, char *res)
 	{
 		dup2(pipes[0], STDIN_FILENO);
 		close(pipes[1]);
+		shell->type[EXEC] = 0;
+		helper_for_com(shell, com->content);
 		res = ft_strdup(com->next->content);
 		do_redir_pipe(shell, com->next, sepp->next, res);
 		exit(0);
@@ -81,87 +85,14 @@ void		do_pipe(t_shell *shell, t_list *com, t_list *separ, char *res)
 	waitpid(-1, 0, 0);
 }
 
-int 		create_open(t_list *sep, char *args)
-{
-	if (access(args, F_OK))
-		return (open(args, O_APPEND | O_RDWR | O_CREAT, 0644));
-	else if (access(args, R_OK | W_OK))
-	{
-		ft_putendl_fd("21sh: permission denied: ", 2);
-		ft_putendl_fd(args, 2);
-		return (0);
-	}
-	else if (!(ft_strcmp(sep->content, "<<")) || !(ft_strcmp(sep->content, ">>")))
-		return (open(args, O_APPEND | O_RDWR));
-	else
-		return (open(args, O_TRUNC | O_APPEND | O_RDWR));
-}
-
-void 		do_redir(t_shell *shell, t_list *com, t_list *separ, char *res)
-{
-	int 	fd;
-	char 	**args;
-
-	args = ft_split_with_str(com->next->content, " \n\t");
-	if (!(fd = create_open(separ, args[0])))
-		return ;
-	if (!(ft_strcmp(separ->content, "<<")) || !(ft_strcmp(separ->content, "<")))
-	{
-		dup2(fd, shell->fd[0]);
-		shell->fd[0] = fd;
-	}
-	else
-	{
-		dup2(fd, shell->fd[1]);
-		shell->fd[1] = fd;
-	}
-	close(fd);
-	res ? free(res) : 0;
-	ft_free_split(args, 0);
-	res = ft_strdup(com->content);
-	do_redir_pipe(shell, com->next, separ->next, res);
-}
-
-char		*do_redir_pipe(t_shell *shell, t_list *com, t_list *sep, char *res)
-{
-	if (sep && sep->content)
-	{
-		if (!(ft_strcmp(sep->content, "|")))
-			do_pipe(shell, com, sep, res);
-		else if (!(ft_strcmp(sep->content, ">>")) || !(ft_strcmp(sep->content, "<<"))
-			|| !(ft_strcmp(sep->content, ">")) || !(ft_strcmp(sep->content, "<")))
-			do_redir(shell, com, sep, res);
-	}
-	if (res)
-		helper_for_com(shell, res);
-	return (res);
-}
-
-void		return_all(t_shell *shell)
-{
-	shell->type[PIPE] = 0;
-	shell->type[REDIR] = 0;
-	shell->type[EXEC] = 0;
-	if (shell->fd[0] != 0)
-	{
-		dup2(0, shell->fd[0]);
-		close(shell->fd[0]);
-	}
-	if (shell->fd[1] != 1)
-	{
-		dup2(1, shell->fd[1]);
-		close(shell->fd[1]);
-	}
-	shell->fd[0] = 0;
-	shell->fd[1] = 1;
-}
-
 char		*check_exec(char *com, t_shell *shell)
 {
 	shell->commands = NULL;
 	shell->sep = NULL;
 	shell->fd[0] = 0;
 	shell->fd[1] = 1;
+	shell->oldfd[0] = 0;
+	shell->oldfd[1] = 1;
 	check_helper(shell, com);
 	if (shell->type[PIPE] == 0 && shell->type[REDIR] == 0)
 	{

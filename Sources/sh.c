@@ -22,18 +22,6 @@ void			ft_put_prompt(char *str)
 		put = str;
 }
 
-void			my_int(void)
-{
-	ft_putstr("\n", 0);
-	ft_put_prompt(NULL);
-}
-
-void			int_ignore(int signo)
-{
-	write(1, "\n", 1);
-	signal(signo, SIG_IGN);
-}
-
 int				main(int ac, char *av[], char *envp[])
 {
 	char		*command;
@@ -50,7 +38,6 @@ int				main(int ac, char *av[], char *envp[])
 	}
 	while ((c = -1))
 	{
-		signal(SIGINT, (void*)my_int);
 		//initialize_readline();
 		command = readline(shell.prompt);
 		if (!command)

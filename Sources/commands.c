@@ -101,15 +101,19 @@ void			do_command(char *command, t_shell *shell)
 {
 	char		*com;
 	char 		*check;
+	char		**args;
 
-	if ((!(is_not_valid(command))) && (com = check_quotation(command, 1, shell)))
+	if ((args = ft_split_with_str(command, " \n\t")) && *args)
 	{
-		if ((check = check_exec(com, shell)))
+		if ((!(is_not_valid(command))) && (com = check_quotation(command, 1, shell)))
 		{
-			helper_for_com(shell, check);
-			free(check);
+			if ((check = check_exec(com, shell)))
+			{
+				helper_for_com(shell, check);
+				free(check);
+			}
+			shell->path = NULL;
 		}
-		shell->path = NULL;
-		free(com);
+		ft_free_split(args, 0);
 	}
 }

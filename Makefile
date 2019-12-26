@@ -14,6 +14,7 @@ SRC  =	Sources/commands.c				\
 		Sources/ft_split_with_str.c		\
 		Sources/readline.c				\
 		Sources/redirection.c			\
+		Sources/redirection_1.c			\
 		Sources/ft_3.c          		\
 		Sources/ft_4.c          		\
 		Sources/parser.c				\

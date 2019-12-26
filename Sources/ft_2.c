@@ -54,10 +54,10 @@ char				*ft_strstr(const char *s1, const char *s2)
 	return (NULL);
 }
 
-char		*ft_strdup(const char *s1)
+char				*ft_strdup(const char *s1)
 {
-	int		i;
-	char	*str;
+	int				i;
+	char			*str;
 
 	MALLOC(str, (sizeof(char *) * (ft_strlen(s1) + 1)));
 	i = 0;

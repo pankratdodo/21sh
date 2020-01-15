@@ -60,7 +60,7 @@ char		*do_redir_pipe(t_shell *shell, t_list *com, t_list *sep, char *res)
 	if (sep && sep->content)
 	{
 		if (!(ft_strcmp(sep->content, "|")))
-			do_pipe(shell, com, sep, res);
+			do_pipe(shell, com, sep);
 		else if (!(ft_strcmp(sep->content, ">>"))
 		|| !(ft_strcmp(sep->content, "<<")) || !(ft_strcmp(sep->content, ">"))
 		|| !(ft_strcmp(sep->content, "<")))

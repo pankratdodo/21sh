@@ -37,6 +37,7 @@ int				check_command(char **args, t_shell *shell)
 	char		*path;
 	t_list		*lst;
 
+	shell->path = NULL;
 	lst = shell->path_lst;
 	if (access(args[0], X_OK))
 	{
@@ -115,5 +116,6 @@ void			do_command(char *command, t_shell *shell)
 			shell->path = NULL;
 		}
 		ft_free_split(args, 0);
+        return_all(shell);
 	}
 }

@@ -122,7 +122,8 @@ static char			**ash_complition(const char *text, int start, int end);
 static char			*command_generator(const char *text, int state);
 
 char				*check_exec(char *com, t_shell *shell);
-void				do_pipe(t_shell *shell, t_list *com, t_list *separ, char *res);
+void				do_pipe(t_shell *shell, t_list *com, t_list *separ);
+void				pipe_help(t_shell *shell, t_list *com, t_list *separ, int k);
 void				check_helper(t_shell *shell, char *com);
 pid_t				do_exec(t_shell *shell, char **args);
 char				*do_redir_pipe(t_shell *shell, t_list *com, t_list *sep, char *res);

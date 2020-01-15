@@ -50,33 +50,53 @@ void		check_helper(t_shell *shell, char *com)
 	}
 }
 
-void		do_pipe(t_shell *shell, t_list *com, t_list *separ, char *res)
+void			pipe_help(t_shell *shell, t_list *com, t_list *separ, int k)
+{
+	t_list		*sepp;
+	char		*res;
+
+	sepp = separ;
+	if (k == 0)
+	{
+		if (!(check_command(ft_split_with_str(com->next->content," \n\t"), shell)))
+		{
+			ft_putstr("21sh: command not found: ", 0);
+			ft_putstr(com->next->content, 1);
+		}
+		res = ft_strdup(com->content);
+		do_redir_pipe(shell, com->next, sepp->next, res);
+	}
+	else
+	{
+		if (!(check_command(ft_split_with_str(com->content, " \n\t"), shell)))
+		{
+			ft_putstr("21sh: command not found: ", 0);
+			ft_putstr(com->content, 1);
+		}
+		res = ft_strdup(com->next->content);
+		do_redir_pipe(shell, com->next, sepp->next, res);
+	}
+}
+
+void		do_pipe(t_shell *shell, t_list *com, t_list *separ)
 {
 	int			pipes[2];
 	int			pid[2];
-	t_list		*sepp;
 
-	sepp = separ;
 	if (pipe(pipes) != 0)
 		ft_putendl_fd("pipe error", 2);
 	else if (!(pid[0] = fork()))
 	{
 		dup2(pipes[1], STDOUT_FILENO);
 		close(pipes[0]);
-		shell->type[EXEC] = 0;
-		helper_for_com(shell, com->next->content);
-		res = ft_strdup(com->content);
-		do_redir_pipe(shell, com->next, sepp->next, res);
+		pipe_help(shell, com, separ, 0);
 		exit(0);
 	}
 	if (!(pid[1] = fork()))
 	{
 		dup2(pipes[0], STDIN_FILENO);
 		close(pipes[1]);
-		shell->type[EXEC] = 0;
-		helper_for_com(shell, com->content);
-		res = ft_strdup(com->next->content);
-		do_redir_pipe(shell, com->next, sepp->next, res);
+		pipe_help(shell, com, separ, 1);
 		exit(0);
 	}
 	close(pipes[0]);

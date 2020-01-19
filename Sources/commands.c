@@ -80,7 +80,7 @@ void			helper_for_com(t_shell *shell, char *com)
 	char		**args;
 	pid_t		pid;
 
-	if ((args = ft_split_with_str(com, " \n\t")))
+	if ((args = ft_split_with_str(com, " \n\t<>&|")))
 	{
 		if (!is_unstandart(args, shell))
 		{
@@ -117,5 +117,7 @@ void			do_command(char *command, t_shell *shell)
 		}
 		ft_free_split(args, 0);
         return_all(shell);
+		free_list(shell->commands);
+		free_list(shell->sep);
 	}
 }

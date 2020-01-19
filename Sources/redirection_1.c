@@ -46,7 +46,7 @@ void		do_redir(t_shell *shell, t_list *com, t_list *separ, char *res)
 	else
 		do_dup(shell, 1, fd);
 	close(fd);
-	res ? free(res) : 0;
+	//res ? free(res) : 0;
 	ft_free_split(args, 0);
 	res = ft_strdup(com->content);
 	do_redir_pipe(shell, com->next, separ->next, res);
@@ -54,7 +54,7 @@ void		do_redir(t_shell *shell, t_list *com, t_list *separ, char *res)
 	dup2(shell->oldfd[1], 1);
 }
 
-char		*do_redir_pipe(t_shell *shell, t_list *com, t_list *sep, char *res)
+char		*do_redir_pipe(t_shell *shell, t_list *com, t_list *sep, char *res)//сега когда много команд потому что он делает ферст команду которая дролжна быть ласт
 {
 	shell->type[EXEC] = 1;
 	if (sep && sep->content)
@@ -67,6 +67,9 @@ char		*do_redir_pipe(t_shell *shell, t_list *com, t_list *sep, char *res)
 			do_redir(shell, com, sep, res);
 	}
 	if (res)
+	{
+//		ft_putstr(res, 1);
 		helper_for_com(shell, res);
+	}
 	return (res);
 }

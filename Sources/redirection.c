@@ -38,12 +38,12 @@ void		check_helper(t_shell *shell, char *com)
 		if (com[i + 1] == '|')
 		{
 			com = parser_pipe(shell, com);
-			i = 0;
+			i = -1;
 		}
 		else if (com[i + 1] == '<' || com[i + 1] == '>')
 		{
 			com = parser_redir(shell, com);
-			i = 0;
+			i = -1;
 		}
 		else
 			i++;

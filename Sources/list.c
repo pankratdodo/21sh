@@ -12,6 +12,18 @@
 
 #include "../Includes/list.h"
 
+void			free_list(t_list *list)
+{
+	t_list		*tmp;
+
+	while (list)
+	{
+		tmp = list;
+		list = list->next;
+		free(tmp);
+	}
+}
+
 t_list			*list_remove_front(t_list *list, int to_free)
 {
 	t_list		*ret;
@@ -36,22 +48,6 @@ int				lst_count(t_list *list)
 		count++;
 	}
 	return (count);
-}
-
-t_list			*list_add_front(t_list *list, void *content)
-{
-	t_list		*item;
-
-	if (!list)
-		return (create_list(content));
-	if (!(item = malloc(sizeof(t_list))))
-	{
-		write(1, "Malloc error\n", 13);
-		exit(1);
-	}
-	item->content = content;
-	item->next = list;
-	return (item);
 }
 
 t_list			*list_add_back(t_list *list, void *content)

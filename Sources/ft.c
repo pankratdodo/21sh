@@ -65,14 +65,17 @@ int					ft_strcmp(const char *s11, const char *s22)
 	s1 = (unsigned char*)s11;
 	s2 = (unsigned char*)s22;
 	i = 0;
-	while (s1[i] && s2[i])
+	if (s1 && s2)
 	{
-		if (s1[i] != s2[i])
+		while (s1[i] && s2[i])
+		{
+			if (s1[i] != s2[i])
+				return (s1[i] - s2[i]);
+			i++;
+		}
+		if ((s1[i] == '\0' && s2[i] != '\0') || (s1[i] != '\0' && s2[i] == '\0'))
 			return (s1[i] - s2[i]);
-		i++;
 	}
-	if ((s1[i] == '\0' && s2[i] != '\0') || (s1[i] != '\0' && s2[i] == '\0'))
-		return (s1[i] - s2[i]);
 	return (0);
 }
 

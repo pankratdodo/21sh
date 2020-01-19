@@ -27,5 +27,6 @@ int					lst_count(t_list *list);
 t_list				*list_add_front(t_list *list, void *content);
 t_list				*list_add_back(t_list *list, void *content);
 t_list				*create_list(void *content);
+void				free_list(t_list *list);
 
 #endif

@@ -1,82 +1,90 @@
+#include <zconf.h>
 #include "../Includes/sh.h"
 
-char		*parser_redir(t_shell *shell, char *com)
+int ft_strsearch(char *str, char *tmp, int len)
 {
-	int 	i;
-	char	*first;
+	int i;
+	int j;
 
-	i = 0;
-	shell->type[REDIR] = 1;
-	if (ft_strchr(com, '&'))
-		return (parse_redir_fd(shell, com));
-	else
+	i = -1;
+	j = -1;
+	while (tmp[++i])
 	{
-		if (com[i] && com[i] != '>' && com[i] != '<')
+		while (str[++j] && j < len)
 		{
-			while (com[i] && com[i] != '>' && com[i] != '<')
-				i++;
-			if ((first = ft_strcpy_len(com, 0, i - 1)))
-				shell->commands = list_add_back(shell->commands, first);
+			if (str[j] == tmp[i])
+				return (1);
 		}
-		if (com[i] && com[i + 1] && com[i] == '<' && com[i + 1] == '<')
-			shell->sep = list_add_back(shell->sep, "<<");
-		else if (com[i] && com[i + 1] && com[i] == '>' && com[i + 1] == '>')
-			shell->sep = list_add_back(shell->sep, ">>");
-		else if (com[i] && com[i + 1] && com[i] == '<' && com[i + 1] != '<')
-			shell->sep = list_add_back(shell->sep, "<");
-		else if (com[i] && com[i + 1] && com[i] == '>' && com[i + 1] != '>')
-			shell->sep = list_add_back(shell->sep, ">");
-		while (com[i] && (com[i] == '>' || com[i] == '<'))
-			i++;
-		return (add_last_com(com, shell, i + 1));
+		j = -1;
 	}
+	return (0);
 }
 
-char		*parser_pipe(t_shell *shell, char *com)
+void		check_first(t_shell *shell, char *com, int i)
 {
-	int 	i;
-	char 	*first;
+	char *first;
+	int j;
 
-	i = 0;
-	if (com[i] && com[i] != '|')
+	j = 0;
+	if (!(ft_strsearch(com, "|<>&", i)))
 	{
-		shell->type[PIPE] = 1;
-		if ((first = ft_strccpy(com, '|')))
-			shell->commands = list_add_back(shell->commands, first);
-		i = ft_strclen(com, '|');
-	}
-	else
-		i++;
-	shell->sep = list_add_back(shell->sep, "|");
-	return (add_last_com(com, shell, i + 1));
-}
-
-char		*parse_redir_fd(t_shell *shell, char *com)
-{
-	int		i;
-	char 	*first;
-
-	i = 0;
-	while (com[i] && com[i] != '&')
-		i++;
-	if ((first = ft_strcpy_len(com, 0, i)))
+		if (!(first = malloc(sizeof(char*) * i)))
+			on_crash(MALLOC_ERR);
+		while (j < i)
+		{
+			first[j] = com[j];
+			j++;
+		}
+		first[j] = '\0';
 		shell->commands = list_add_back(shell->commands, first);
-	if (com[i] && com[i] == '&' && com[i - 1] == '>')
-		shell->sep = list_add_back(shell->sep, ">&");
-	else if (com[i] && com[i] == '&' && com[i - 1] == '<')
-		shell->sep = list_add_back(shell->sep, "<&");
-	return (add_last_com(com, shell, i + 1));
+	}
 }
 
-char		*add_last_com(char *com, t_shell *shell, int i)
+void		parser_redir(t_shell *shell, char *com, int i)
 {
-	int 	count;
+	int 	j;
 
-	if (com[i] && (com[i] == '>' || com[i] == '<'))
+	check_first(shell, com, i);
+	if (com[i] && com[i] == '<' && com[i + 1] == '<')
+		shell->sep = list_add_back(shell->sep, "<<");
+	if (com[i] && com[i] == '>' && com[i + 1] == '>')
+		shell->sep = list_add_back(shell->sep, ">>");
+	if (com[i] && com[i] == '<' && com[i + 1] != '<')
+		shell->sep = list_add_back(shell->sep, "<");
+	if (com[i] && com[i] == '>' && com[i + 1] != '>')
+		shell->sep = list_add_back(shell->sep, ">");
+	while (com[i] && (com[i] == '>' || com[i] == '<' || com[i] == '&'))
+		j = ++i;
+	while (com[i] && com[i] != '<' && com[i] != '>' && com[i] != '|' && com[i] != '&')
 		i++;
-	count = i;
-	while (com[i] && com[i] != '>' && com[i] != '|' && com[i] != '<' && com[i] != '&')
-		i++;
-	shell->commands = list_add_back(shell->commands, ft_strcpy_len(com, count, i - 1));
-	return (com + i);
+	shell->commands = list_add_back(shell->commands, ft_strcpy_len(com, j, i - 1));
 }
+
+void		parser_pipe(t_shell *shell, char *com, int i)
+{
+	int j;
+
+	check_first(shell, com, i);
+	shell->sep = list_add_back(shell->sep, "|");
+	j = ++i;
+	while (com[i] && com[i] != '<' && com[i] != '>' && com[i] != '|' && com[i] != '&')
+		i++;
+	shell->commands = list_add_back(shell->commands, ft_strcpy_len(com, j, i - 1));
+}
+
+//char		*parse_redir_fd(t_shell *shell, char *com)
+//{
+//	int		i;
+//	char 	*first;
+//
+//	i = 0;
+//	while (com[i] && com[i] != '&')
+//		i++;
+//	if ((first = ft_strcpy_len(com, 0, i)))
+//		shell->commands = list_add_back(shell->commands, first);
+//	if (com[i] && com[i] == '&' && com[i - 1] == '>')
+//		shell->sep = list_add_back(shell->sep, ">&");
+//	else if (com[i] && com[i] == '&' && com[i - 1] == '<')
+//		shell->sep = list_add_back(shell->sep, "<&");
+//	return (add_last_com(com, shell, i + 1));
+//}

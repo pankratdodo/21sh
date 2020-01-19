@@ -23,7 +23,8 @@ char 		*ft_strccpy(char *str, char c)
 	len = 0;
 	while (str[len] && str[len] != c)
 		len++;
-	MALLOC(src, sizeof(char *) * len + 1);
+	if (!(src = malloc(sizeof(char*) * len + 1)))
+		on_crash(MALLOC_ERR);
 	while (str[i] && str[i] != c)
 	{
 		src[i] = str[i];
@@ -44,22 +45,20 @@ int 		ft_strclen(char *str, char c)
 	return (i);
 }
 
-char 		*ft_strcpy_len(char *str, int first, int last)
+char 		*ft_strcpy_len(char *com, int first, int last)
 {
-	char 	*src;
-	int 	i;
+	char *str;
+	int i;
 
 	i = 0;
-	if (!str || ft_strlen(str) < last)
-		return (NULL);
-	MALLOC(src, sizeof(char *) * (last - first + 2));
-	while (str[first] && first <= last)
+	if (!(str = malloc(sizeof(char *) * (last - first + 2))))
+		on_crash(MALLOC_ERR);
+	while (first <= last)
 	{
-		src[i] = str[first];
-		i++;
+		str[i] = com[first];
 		first++;
+		i++;
 	}
-	first++;
-	src[first] = '\0';
-	return (src);
+	str[i] = '\0';
+	return (str);
 }

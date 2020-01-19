@@ -41,7 +41,7 @@ void			change_old_pwd(t_shell *shell)
 	char		**args;
 	char		*str;
 
-	MALLOC(args,(sizeof(char *) * 4));
+	(!(args = malloc (sizeof(char *) * 4))) ? on_crash(MALLOC_ERR) : 0;
 	if (!(str = getcwd(NULL, 0)))
 		on_crash(GETCWD_ERR);
 	args[0] = "setenv";

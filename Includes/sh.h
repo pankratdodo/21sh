@@ -94,7 +94,7 @@ char				*ft_strchr(const char *s, int c);
 char				*ft_itoa(int n);
 char				*ft_strcpy(char *dst, const char *src);
 int					ft_atoi(const char *str);
-char 				*ft_strcpy_len(char *str, int first, int last);
+char 				*ft_strcpy_len(char *com, int first, int last);
 int 				ft_strclen(char *str, char c);
 char 				*ft_strccpy(char *str, char c);
 void				ft_putendl_fd(char const *s, int fd);
@@ -109,8 +109,8 @@ int					ft_error(char *str, int k);
 
 char				*add_last_com(char *com, t_shell *shell, int i);
 char				*parse_redir_fd(t_shell *shell, char *com);
-char				*parser_pipe(t_shell *shell, char *com);
-char				*parser_redir(t_shell *shell, char *com);
+void				parser_pipe(t_shell *shell, char *com, int i);
+void				parser_redir(t_shell *shell, char *com, int i);
 
 char				*check_quotation(const char *str, int to_free, t_shell *shell);
 void				return_prompt(t_shell *shell);

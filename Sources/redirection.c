@@ -33,20 +33,21 @@ void		check_helper(t_shell *shell, char *com)
 	int		i;
 
 	i = 0;
-	while (com[i + 1])
+	if (ft_strchr_my(com, "|<>&"))
 	{
-		if (com[i + 1] == '|')
+		while (com[i])
 		{
-			com = parser_pipe(shell, com);
-			i = -1;
-		}
-		else if (com[i + 1] == '<' || com[i + 1] == '>')
-		{
-			com = parser_redir(shell, com);
-			i = -1;
-		}
-		else
+			if (com[i] == '|')
+				parser_pipe(shell, com, i);
+			if ((com[i] == '<' || com[i] == '>') && com[i + 1] && com[i + 1] != '>' && com[i + 1] != '<')
+				parser_redir(shell, com, i);
+			else if (com[i] == '<' || com[i] == '>')
+			{
+				parser_redir(shell, com, i);
+				i++;
+			}
 			i++;
+		}
 	}
 }
 
@@ -104,6 +105,23 @@ void		do_pipe(t_shell *shell, t_list *com, t_list *separ)
 	waitpid(-1, 0, 0);
 	waitpid(-1, 0, 0);
 }
+
+//void displayList(t_list *list)
+//{
+//	t_list *tmp;
+//
+//	if(list == NULL)
+//		printf(" List is empty.\n");
+//	else
+//	{
+//		tmp = list;
+//		while(tmp != NULL)
+//		{
+//			printf(" Data = %s\n", tmp->content);
+//			tmp = tmp->next;
+//		}
+//	}
+//}
 
 char		*check_exec(char *com, t_shell *shell)
 {

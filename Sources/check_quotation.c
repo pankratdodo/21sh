@@ -41,7 +41,8 @@ char		*remove_quote(char *str, char c)
 	int		j;
 	int		dels;
 
-	MALLOC(ret, (ft_strlen(str) - 1));
+	if (!(ret = malloc(ft_strlen(str) - 1)))
+		on_crash(MALLOC_ERR);
 	i = -1;
 	j = -1;
 	dels = 0;

@@ -107,8 +107,9 @@ int					ft_redir(char *str, int k);
 char				*ft_strchr_my(const char *s, char *c);
 int					ft_error(char *str, int k);
 
-char				*add_last_com(char *com, t_shell *shell, int i);
-char				*parse_redir_fd(t_shell *shell, char *com);
+int					ft_strsearch(char *str, char *tmp, int len);
+void				check_first(t_shell *shell, char *com, int i);
+int					parse_redir_fd(t_shell *shell, char *com, int i);
 void				parser_pipe(t_shell *shell, char *com, int i);
 void				parser_redir(t_shell *shell, char *com, int i);
 

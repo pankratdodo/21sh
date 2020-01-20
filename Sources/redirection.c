@@ -41,7 +41,7 @@ void		check_helper(t_shell *shell, char *com)
 				parser_pipe(shell, com, i);
 			if ((com[i] == '<' || com[i] == '>') && com[i + 1] && com[i + 1] != '>' && com[i + 1] != '<')
 				parser_redir(shell, com, i);
-			else if (com[i] == '<' || com[i] == '>')
+			else if (com[i] == '<' || com[i] == '>' || com[i] == '&')
 			{
 				parser_redir(shell, com, i);
 				i++;
@@ -132,6 +132,9 @@ char		*check_exec(char *com, t_shell *shell)
 	shell->oldfd[0] = 0;
 	shell->oldfd[1] = 1;
 	check_helper(shell, com);
+//	displayList(shell->commands);
+//	displayList(shell->sep);
+//	exit(0);
 	if (shell->type[PIPE] == 0 && shell->type[REDIR] == 0)
 	{
 		shell->type[EXEC] = 1;

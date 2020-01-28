@@ -80,6 +80,7 @@ void			helper_for_com(t_shell *shell, char *com)
 	char		**args;
 	pid_t		pid;
 
+	shell->type[FIRST] = 0;
 	if ((args = ft_split_with_str(com, " \n\t<>&|")))
 	{
 		if (!is_unstandart(args, shell))
@@ -104,11 +105,12 @@ void			do_command(char *command, t_shell *shell)
 	char 		*check;
 	char		**args;
 
+	shell->type[FIRST] = 1;
 	if ((args = ft_split_with_str(command, " \n\t")) && *args)
 	{
 		if ((!(is_not_valid(command))) && (com = check_quotation(command, 1, shell)))
 		{
-			if ((check = check_exec(com, shell)))
+			if ((check = check_exec(com, shell)) && shell->type[FIRST] == 1)
 			{
 				helper_for_com(shell, check);
 				free(check);

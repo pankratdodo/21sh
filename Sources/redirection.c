@@ -106,23 +106,6 @@ void		do_pipe(t_shell *shell, t_list *com, t_list *separ)
 	waitpid(-1, 0, 0);
 }
 
-//void displayList(t_list *list)
-//{
-//	t_list *tmp;
-//
-//	if(list == NULL)
-//		printf(" List is empty.\n");
-//	else
-//	{
-//		tmp = list;
-//		while(tmp != NULL)
-//		{
-//			printf(" Data = %s\n", tmp->content);
-//			tmp = tmp->next;
-//		}
-//	}
-//}
-
 char		*check_exec(char *com, t_shell *shell)
 {
 	shell->commands = NULL;
@@ -132,15 +115,12 @@ char		*check_exec(char *com, t_shell *shell)
 	shell->oldfd[0] = 0;
 	shell->oldfd[1] = 1;
 	check_helper(shell, com);
-//	displayList(shell->commands);
-//	displayList(shell->sep);
-//	exit(0);
 	if (shell->type[PIPE] == 0 && shell->type[REDIR] == 0)
 	{
 		shell->type[EXEC] = 1;
 		return (com);
 	}
 	if (shell->type[PIPE] == 1 || shell->type[REDIR] == 1)
-		do_redir_pipe(shell, shell->commands, shell->sep, NULL);
+        do_redir_pipe(shell, shell->commands, shell->sep, NULL);
 	return (NULL);
 }

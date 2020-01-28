@@ -46,12 +46,12 @@ void		do_redir(t_shell *shell, t_list *com, t_list *separ, char *res)
 	else
 		do_dup(shell, 1, fd);
 	close(fd);
-	res ? free(res) : 0;
 	ft_free_split(args, 0);
-	res = ft_strdup(com->content);
-	do_redir_pipe(shell, com->next, separ->next, res);
+	!res ? res = ft_strdup(com->content) : 0;
+	helper_for_com(shell, res);
 	dup2(shell->oldfd[0], 0);
 	dup2(shell->oldfd[1], 1);
+	do_redir_pipe(shell, com->next, separ->next, res);
 }
 
 char		*do_redir_pipe(t_shell *shell, t_list *com, t_list *sep, char *res)
@@ -62,11 +62,10 @@ char		*do_redir_pipe(t_shell *shell, t_list *com, t_list *sep, char *res)
 		if (!(ft_strcmp(sep->content, "|")))
 			do_pipe(shell, com, sep);
 		else if (!(ft_strcmp(sep->content, ">>"))
-		|| !(ft_strcmp(sep->content, "<<")) || !(ft_strcmp(sep->content, ">"))
-		|| !(ft_strcmp(sep->content, "<")))
+		|| !(ft_strcmp(sep->content, ">")))
 			do_redir(shell, com, sep, res);
 	}
-	if (res)
+	if (res && shell->type[FIRST] == 1)
 		helper_for_com(shell, res);
-	return (res);
+	return (NULL);
 }

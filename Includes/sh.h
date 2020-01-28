@@ -45,6 +45,7 @@ enum 				e_type
 	PIPE = 0,
 	REDIR,
 	EXEC,
+	FIRST,
 	ELEMENTS
 };
 

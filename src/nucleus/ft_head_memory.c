@@ -36,7 +36,7 @@ t_memory	*ft_head_memory(void)
 		return (dop_memmory(fd));
 	if (!(head = (t_memory *)malloc(sizeof(t_memory))))
 		ft_error_q(2);
-    ft_bzero(head, sizeof(t_memory));
+	ft_bzero(head, sizeof(t_memory));
 	head->inp = ft_strdup(line);
 	ft_strdel(&line);
 	head->back = NULL;

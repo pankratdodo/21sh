@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-int			ft_nb_words_str(const char *str, const char *symbols)
+int			ft_nb_w_str(const char *str, const char *symbols)
 {
 	int		i;
 	int		sym;
@@ -37,7 +37,7 @@ int			ft_nb_words_str(const char *str, const char *symbols)
 	return (count);
 }
 
-int			ft_ln_w_str(const char *str, char *symbols)
+int			ft_ln_w(const char *str, char *symbols)
 {
 	int		i;
 
@@ -56,9 +56,7 @@ char		**ft_split_with_str(char *str, char *symb)
 
 	i = 0;
 	j = 0;
-	if (!str)
-		return (NULL);
-	if (!(res = malloc(sizeof(char*) * (ft_nb_words_str(str, symb) + 2))))
+	if (!(str) || !(res = malloc(sizeof(char*) * (ft_nb_w_str(str, symb) + 2))))
 		return (NULL);
 	while (str[i])
 	{
@@ -67,8 +65,7 @@ char		**ft_split_with_str(char *str, char *symb)
 		if (str[i])
 		{
 			k = 0;
-			if (!(res[j] = malloc(sizeof(char) *
-			        (ft_ln_w_str(str + i, symb) + 1))))
+			if (!(res[j] = malloc(sizeof(char) * (ft_ln_w(str + i, symb) + 1))))
 				return (NULL);
 			while (str[i] && !(ft_strchr(symb, str[i])))
 				res[j][k++] = str[i++];

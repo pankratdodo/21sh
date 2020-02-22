@@ -67,7 +67,8 @@ char		**ft_split_with_str(char *str, char *symb)
 		if (str[i])
 		{
 			k = 0;
-			if (!(res[j] = malloc(sizeof(char) * (ft_ln_w_str(str + i, symb) + 1))))
+			if (!(res[j] = malloc(sizeof(char) *
+			        (ft_ln_w_str(str + i, symb) + 1))))
 				return (NULL);
 			while (str[i] && !(ft_strchr(symb, str[i])))
 				res[j][k++] = str[i++];

@@ -18,7 +18,7 @@ char	*ft_strndup(const char *s1, int n)
 	int		k;
 
 	k = 0;
-	count = (char*)malloc(sizeof(char) * ft_strlen(s1));
+	count = (char*)malloc(sizeof(char) * ft_strlen(s1) + 1);
 	if (count == NULL)
 		return (NULL);
 	while (s1[k] != '\0' && k < n)

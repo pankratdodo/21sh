@@ -73,7 +73,6 @@ int			do_cd(t_builtins *cd, char *str)
 	char		*full_path;
 	int			res_d;
 	int			res_l;
-	int			k;
 
 	if ((full_path = create_full_path(str, cd)))
 	{
@@ -88,8 +87,6 @@ int			do_cd(t_builtins *cd, char *str)
 		else
 			return (ft_cd_error(str, 6, 0));
 	}
-	if (!ft_strcmp(str, "-") && (k = ft_findenv("PWD=", g_env)) != -404)
-		ft_printf("%s\n", g_env[k] + 4);
 	free(full_path);
 	return (0);
 }

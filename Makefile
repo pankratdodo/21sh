@@ -6,14 +6,14 @@
 #    By: qmartina <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/17 16:01:11 by qmartina          #+#    #+#              #
-#    Updated: 2019/10/17 16:01:15 by qmartina         ###   ########.fr        #
+#    Updated: 2020/02/22 15:44:28 by plettie          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	21sh
 
 CC			=	gcc
-FLAGS		=	-Wall -Wextra -Werror -g
+FLAGS		=	-g -Wall -Wextra -Werror
 
 DELTA		=	$$(echo "$$(tput cols)-47"|bc)
 

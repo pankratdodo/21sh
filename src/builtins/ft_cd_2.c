@@ -51,7 +51,7 @@ char		*full_path_helper(char *ret, char *all, char *path)
 	}
 	if ((check_file(ret, IS_D)) == -1)
 	{
-		ft_cd_error(path, 4, 0);
+		ft_cd_error(path, 1, 0);
 		free(ret);
 		return (NULL);
 	}
@@ -100,7 +100,7 @@ char		*create_full_path(char *path, t_builtins *cd)
 	i = -1;
 	if (path)
 	{
-		all_path = ft_strsplit1(path, '/');
+		all_path = ft_split_with_str(path, "/");
 		if ((ret = full_path_3(path, all_path)))
 			return (ret);
 		ret = full_path_helper_2(path, cd);

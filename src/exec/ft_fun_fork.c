@@ -29,7 +29,7 @@ int			ft_what_flag(char *str, int *b)
 	return (flag);
 }
 
-void		ft_open_flag(char *str, int *flag, int **ff, int *fd)
+int			ft_open_flag(char *str, int *flag, int **ff, int *fd)
 {
 	if (*flag == 1 || *flag == 6)
 		*fd = open(str, O_CREAT | O_RDWR | O_TRUNC,
@@ -46,12 +46,15 @@ void		ft_open_flag(char *str, int *flag, int **ff, int *fd)
 		ft_putstr_fd("21sh: open fd ERROR ", 2);
 		ft_putendl_fd(str, 2);
 		*flag = 0;
+		return (1);
 	}
 	else if (*flag == 3 && **ff <= 0)
 	{
 		ft_putstr_fd("21sh: open fd ERROR ", 2);
 		ft_putendl_fd(str, 2);
+		return (1);
 	}
+	return (0);
 }
 
 void		ft_fun_fork(char *path, char **arg, pid_t pid)

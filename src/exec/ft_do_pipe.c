@@ -16,7 +16,8 @@ int			ft_fd_do_flag(t_pipe *p, int *fd_in, char **av)
 {
 	int			fd;
 
-	ft_open_flag(av[p->i], &(p->flag), &fd_in, &p->fd);
+	if (ft_open_flag(av[p->i], &(p->flag), &fd_in, &p->fd))
+		return (-404);
 	fd = p->fd;
 	if (p->flag == 1 || p->flag == 2)
 		dup2(p->fd, p->st);
@@ -45,7 +46,8 @@ int			ft_fd_flag(char **av, int *fd_in)
 		else if ((av[p.i][0] == '>' || av[p.i][0] == '<' || av[p.i][0] == '&'))
 			p.flag = ft_what_flag(av[p.i], &(p.b));
 		else if (p.b == 1 && p.flag != 0)
-			fd = ft_fd_do_flag(&p, fd_in, av);
+			if ((fd = ft_fd_do_flag(&p, fd_in, av)) == -404)
+				return (-404);
 	}
 	return (fd);
 }
@@ -55,7 +57,8 @@ void		ft_pid_0(t_exectoken *head, int p[3], char *rt, pid_t pid)
 	if (head->left != NULL)
 		ft_n_pipe(p[1], &p[2], -404, NULL);
 	if (head->file_opt)
-		ft_fd_flag(head->file_opt, &p[2]);
+		if (ft_fd_flag(head->file_opt, &p[2]) == -404)
+			exit(0);
 	if (ft_n_pipe(-404, &p[2], p[0], NULL) && rt != NULL)
 		ft_fun_fork(rt, head->file_args, pid);
 	exit(0);
@@ -95,7 +98,8 @@ void		ft_infinit_pipe(t_exectoken *head, t_memory *q)
 	{
 		if (pipe(p) == -1)
 			exit(0);
-		ft_whatis2(head);
+		if (ft_whatis2(head))
+			break ;
 		if (is_builtin(head->file_args[0]) == 0)
 			rt = hash_get(head->file_args[0]);
 		if ((pid = fork()) == -1)

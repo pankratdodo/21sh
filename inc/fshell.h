@@ -99,7 +99,7 @@ int					ft_n_pipe(int p1, int *fd_in, int p0, t_exectoken **head);
 int					ft_error_args(t_exectoken *tmp);
 void				ft_file_create(t_exectoken *head);
 int					ft_what_flag(char *str, int *b);
-void				ft_open_flag(char *str, int *flag, int **ff, int *fd);
+int					ft_open_flag(char *str, int *flag, int **ff, int *fd);
 int					ft_put_info(void);
 int					ft_env_len(char **env);
 void				ft_show_env(char **env);

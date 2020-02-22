@@ -17,7 +17,6 @@ int			ft_cd_error(char *tmp, int err, int to_free)
 	err == 1 ? ft_printf("42sh : cd: no such file or directory: %s\n", tmp) : 0;
 	err == 2 ? ft_printf("42sh: cd: %s not set\n", tmp) : 0;
 	err == 3 ? ft_printf("42sh: cd: not a directory: %s\n", tmp) : 0;
-	err == 4 ? ft_printf("42sh: cd: no such file or directory: %s\n", tmp) : 0;
 	err == 6 ? ft_printf("42sh: cd: permission denied: %s\n", tmp) : 0;
 	err == 7 ? ft_printf("cd: string not in pwd: %s\n", tmp) : 0;
 	err == 9 ? ft_printf("42sh: cd: too many arguments\n") : 0;
@@ -90,10 +89,10 @@ int			ft_cd(char **str)
 	int			i;
 	int			j;
 
-	i = 0;
+	i = 1;
 	cd.link = 0;
 	cd.cd_p = 0;
-	while (str[++i] && !(j = 0))
+	while (str[i] && !(j = 0))
 	{
 		if (str[i][j] == '-' && ft_strcmp(str[i], "-"))
 		{
@@ -107,6 +106,7 @@ int			ft_cd(char **str)
 			return (ft_cd_error(NULL, 9, 0));
 		else
 			return (do_cd(&cd, str[i]));
+		i++;
 	}
 	return (change_env("HOME=", &cd));
 }

@@ -107,5 +107,6 @@ char				*ft_strndup(const char *s1, int n);
 char				*ft_strjoinch_i(char const *s1, char c,
 					size_t k, size_t max);
 char				*ft_strjointsr_i(char const *s1, size_t k, char *kkk);
+char				**ft_split_with_str(char *str, char *symb);
 
 #endif

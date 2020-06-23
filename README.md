@@ -11,7 +11,7 @@ git clone https://github.com/pankratdodo/21sh.git
 2. `cd` into directrory and run `make`
 ```
 make
-./21-sh
+./21sh
 ```
 
 ## Main project instructions

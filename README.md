@@ -45,7 +45,7 @@ cd 21sh && make && ./21sh
 - The `CTRL+D` et `CTRL+C` keys combination features for line edition and process execution.
 - The “;” command line separator
 - Pipes “|”
-- The 4 following redirections “<”, “>”, “<<” et “>>”
+- The 4 following redirections `<`, `>`, `<<`, `>>`
 - File descriptor aggregation
 - Move the cursor left and right to be able to edit the line at a specific location. Obviously new characters have to be inserted between the existing ones similarly to a classic shell.
 - Use `UP` and `DOWN` arrows to navigate through the command history

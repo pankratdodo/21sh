@@ -8,10 +8,9 @@ You’ll have to start from your minishell and make it stronger to get little by
 ```
 git clone https://github.com/pankratdodo/21sh.git
 ```
-2. `cd` into directrory and run `make`
+2. Run
 ```
-make
-./21sh
+cd 21sh && make && ./21sh
 ```
 
 ## Main project instructions
